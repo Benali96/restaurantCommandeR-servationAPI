@@ -1,13 +1,17 @@
 from rest_framework import serializers
-from .models import Repas,Review
+from .models import Repas,Review, Repa
+class RepaSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Repas
+        fields = "__all__"
 
 class RepasSerializer(serializers.ModelSerializer):
     
     reviews = serializers.SerializerMethodField(method_name='get_reviews',read_only=True)
 
     class Meta:
-        model = Repas
+        model = Repa
         fields = "__all__"
       
     def get_reviews(self,obj):

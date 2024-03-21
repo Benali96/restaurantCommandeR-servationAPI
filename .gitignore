@@ -1,0 +1,9 @@
+accounts/__pycache__/
+accounts/migrations/
+order/__pycache__/
+order/migrations/
+pages/__pycache__/
+Repas/__pycache__/
+Repas/migrations/
+reservation/__pycache__/
+reservation/migrations/

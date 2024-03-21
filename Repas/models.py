@@ -3,6 +3,24 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class Repa(models.Model):
+     x=[
+        ('Pizza','Pizza'),
+        ('Mlawi','Mlawi'),
+        ('Tacos','Tacos'),
+        ('Bagette','Bagette'),
+        ('Ma9loub','Ma9loub'),
+        ('Sandwitch','Sandwitch'),
+        ('Crepe sucree','Crepe sucree'),
+        ('Crepe sallée','Crepe sallée'),
+]
+     name = models.CharField(max_length=200,default="",blank=False)
+     description = models.TextField(max_length=1000,default="",blank=False)
+     price = models.DecimalField(max_digits=5, decimal_places=3)
+     category=models.CharField(max_length=50,null=True,blank=True,choices=x)
+     stock = models.IntegerField(default=0)
+     def __str__(self):
+        return self.name
 
 class Repas(models.Model):
      x=[

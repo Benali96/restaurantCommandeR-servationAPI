@@ -3,6 +3,8 @@ from . import views
 
 
 urlpatterns = [
+    path('repasListe/', views.getRepas,name='repasListe'),
+
  path('repass/', views.get_all_repass,name='repass'),
     path('repass/<str:pk>/', views.get_by_id_repas,name='get_by_id_repas'),
     path('repass/new', views.new_repas,name='new_repas'),

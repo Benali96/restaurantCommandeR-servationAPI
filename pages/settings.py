@@ -4,6 +4,8 @@ from datetime import timedelta
 import os
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,12 +31,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+      'rest_framework',
     'rest_framework.authtoken',
-        'rest_framework_simplejwt',
-
-
-    'django_filters',
+    'rest_framework_simplejwt',
+    'corsheaders',
+     'django_filters',
     'Repas',
     'order',
     'reservation',
@@ -44,6 +45,14 @@ INSTALLED_APPS = [
     'accounts',
 
 ]
+ 
+# White listing the localhost:3000 port
+# for React
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
+   
 
 
 # AllowAny \\ IsAuthenticated \\ IsAdminuser \\ IsAuthenticatedReadOnly
@@ -59,7 +68,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+
 ]
+CORS_ORIGIN_ALLOW_ALL = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
@@ -73,7 +86,9 @@ ROOT_URLCONF = 'pages.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+          
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +100,8 @@ TEMPLATES = [
         },
     },
 ]
-
+ALLOWED_HOSTS += ['127.0.0.1']
+DEBUG = True
 WSGI_APPLICATION = 'pages.wsgi.application'
 
 
@@ -105,9 +121,11 @@ REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES': (
         
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ), "DEFAULT_PERMISSION_CLASSES": [
+    "rest_framework.permissions.AllowAny"],    'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)}
+
     
-}
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),

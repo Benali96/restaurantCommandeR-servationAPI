@@ -1,4 +1,7 @@
 from datetime import datetime, timedelta
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -9,9 +12,10 @@ from .serializers import SingUpSerializer,UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from rest_framework.authtoken.models import Token
 # Create your views here.
-
-
 @api_view(['POST'])
 def register(request):
     data = request.data
@@ -36,9 +40,35 @@ def register(request):
                     status=status.HTTP_400_BAD_REQUEST
                     )
     else:
-        return Response(user.errors)
-    
+ 
+       return Response(user.errors)
+@csrf_exempt
+@api_view(['POST'])
+def user_login(request):
+    # Extract username and password from request data
+    username = request.data.get('username')
+    password = request.data.get('password')
 
+    # Authenticate user
+    user = authenticate(request=request._request, username=username, password=password)
+    
+    # Check if authentication is successful
+    if user is not None:
+        # Here, you can create a session, issue a token, or perform any other necessary actions
+        return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
+    else:
+        # Print debug info to console
+        print(f"Login failed for username: {username}, password: {password}")
+        # Return error response
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def logout_view(request):
+    if request.user.is_authenticated:
+        logout(request)
+        return Response({'detail': 'Logout successful'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def current_user(request):
